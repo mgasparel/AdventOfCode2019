@@ -23,5 +23,21 @@ namespace AdventOfCode2019.Tests
         {
             Assert.Equal(expected, FuelCalculator.CalculateRecursive(input));
         }
+
+        [Fact]
+        public void SolvePart1()
+        {
+            Assert.Equal(
+                3305041,
+                FuelCounterUpper.Count("../../../input/day_01.txt", FuelCalculator.Calculate));
+        }
+
+        [Fact]
+        public void SolvePart2()
+        {
+            Assert.Equal(
+                4954710,
+                FuelCounterUpper.Count("../../../input/day_01.txt", FuelCalculator.CalculateRecursive));
+        }
     }
 }
