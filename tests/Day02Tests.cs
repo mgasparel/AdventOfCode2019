@@ -36,5 +36,21 @@ namespace AdventOfCode2019.Tests
         {
             Assert.Equal(expected, Intcode.Run(input[1], input[2], input));
         }
+
+        [Fact]
+        public void SolvePart1()
+        {
+            var memory = Intcode.Run(12, 2, "../../../input/day_02.txt");
+
+            Assert.Equal(5290681, memory[0]);
+        }
+
+        [Fact]
+        public void SolvePart2()
+        {
+            (int noun, int verb) result = IntcodeInputSolver.Solve(19690720, "../../../input/day_02.txt");
+
+            Assert.Equal(5741, 100 * result.noun + result.verb);
+        }
     }
 }

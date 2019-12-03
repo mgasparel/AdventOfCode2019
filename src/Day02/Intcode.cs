@@ -5,9 +5,7 @@ namespace AdventOfCode2019
 {
     public class Intcode
     {
-        private static string filePath = "day_02.txt";
-
-        public static int[] Run(int noun, int verb)
+        public static int[] Run(int noun, int verb, string filePath)
         {
             var input = System.IO.File.ReadAllText(filePath);
 
