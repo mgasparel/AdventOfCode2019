@@ -12,12 +12,17 @@ namespace AdventOfCode2019
 
         Coordinate[] wire2Path;
 
-        public Coordinate[] Intersections => wire1Path.ToList().Intersect(wire2Path).ToArray();
+        public Coordinate[] Intersections;
+
+        public Dictionary<Coordinate, int> StepsToIntersections = new Dictionary<Coordinate, int>();
 
         public Wires(string wire1Directions, string wire2Directions)
         {
             wire1Path = PopulatePath(new Coordinate(), wire1Directions.Split(','));
             wire2Path = PopulatePath(new Coordinate(), wire2Directions.Split(','));
+
+            Intersections = wire1Path.ToList().Intersect(wire2Path).ToArray();
+            PopulateStepsToIntersections();
         }
 
         public static Coordinate[] PopulatePath(Coordinate origin, string[] directions)
@@ -55,6 +60,49 @@ namespace AdventOfCode2019
             }
 
             return minValue;
+        }
+
+        public int FindMinimumSignalDelay()
+        {
+            int minValue = int.MaxValue;
+            foreach(var kvp in StepsToIntersections)
+            {
+                if(kvp.Value < minValue)
+                {
+                    minValue = kvp.Value;
+                }
+            }
+
+            return minValue;
+        }
+
+        void PopulateStepsToIntersections()
+        {
+            for (int i = 0; i < wire1Path.Length; i++)
+            {
+                if(Intersections.Contains(wire1Path[i]))
+                {
+                    if(!StepsToIntersections.ContainsKey(wire1Path[i]))
+                    {
+                        StepsToIntersections.Add(wire1Path[i], i + 1);
+                    }
+                }
+            }
+
+            for (int i = 0; i < wire2Path.Length; i++)
+            {
+                if(Intersections.Contains(wire2Path[i]))
+                {
+                    if(StepsToIntersections.ContainsKey(wire2Path[i]))
+                    {
+                        StepsToIntersections[wire2Path[i]] += i + 1;
+                    }
+                    else
+                    {
+                        StepsToIntersections.Add(wire2Path[i], i + 1);
+                    }
+                }
+            }
         }
 
         int DistanceToOrigin(Coordinate coordindate)
