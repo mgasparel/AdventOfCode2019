@@ -38,13 +38,8 @@ namespace AdventOfCode2019
 
         static bool SequenceNeverDecreases(string password)
         {
-            for (int i = 0; i < password.Length; i++)
+            for (int i = 1; i < password.Length; i++)
             {
-                if(i == 0)
-                {
-                    continue;
-                }
-
                 if(password[i] < password[i - 1])
                 {
                     return false;
@@ -57,13 +52,8 @@ namespace AdventOfCode2019
         static bool SequenceContainsPairStrict(string password)
         {
             int consecutiveDigits = 1;
-            for (int i = 0; i < password.Length; i++)
+            for (int i = 1; i < password.Length; i++)
             {
-                if(i == 0)
-                {
-                    continue;
-                }
-
                 if(password[i] == password[i - 1])
                 {
                     consecutiveDigits++;
@@ -84,13 +74,8 @@ namespace AdventOfCode2019
 
         static bool SequenceContainsPair(string password)
         {
-            for (int i = 0; i < password.Length; i++)
+            for (int i = 1; i < password.Length; i++)
             {
-                if(i == 0)
-                {
-                    continue;
-                }
-
                 if(password[i] == password[i - 1])
                 {
                     return true;
