@@ -24,7 +24,9 @@ namespace AdventOfCode2019
 
             for(int i = 0; i < memory.Length; i += 4)
             {
-                int? result = RunOpCode(memory, i);
+                var instruction = new Instruction(memory[i]);
+
+                int? result = RunOpCode(memory, i, ParameterMode.Position);
 
                 if(result == null)
                 {
@@ -37,12 +39,20 @@ namespace AdventOfCode2019
             return memory;
         }
 
-        private static int? RunOpCode(int[] memory, int index) =>
+        public static int GetValue(ParameterMode mode, int index, int[] memory)
+            => mode switch
+            {
+                ParameterMode.Immediate => memory[index],
+                ParameterMode.Position => memory[memory[index]],
+                _ => throw new NotSupportedException()
+            };
+
+        private static int? RunOpCode(int[] memory, int index, ParameterMode mode) =>
             memory[index] switch
             {
                 99  => (int?)null,
-                1   => memory[memory[index + 1]] + memory[memory[index + 2]],
-                2   => memory[memory[index + 1]] * memory[memory[index + 2]],
+                1   => GetValue(mode, index + 1, memory) + GetValue(mode, index + 2, memory),
+                2   => GetValue(mode, index + 1, memory) * GetValue(mode, index + 2, memory),
                 _   => throw new ArgumentException()
             };
     }
