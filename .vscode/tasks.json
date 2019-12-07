@@ -37,6 +37,27 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
-        }
+        },
+        {
+          "label": "run coverlet",
+          "command": "coverlet",
+          "type": "process",
+          "args": [
+              "${workspaceFolder}/tests/bin/Debug/netcoreapp3.0/tests.dll",
+              "--target",
+              "dotnet",
+              "--targetargs",
+              "test ${workspaceFolder}/tests/tests.csproj --no-build",
+              "--format",
+              "lcov",
+              "--output",
+              "${workspaceFolder}/tests/coverage/lcov.info"
+          ],
+          "problemMatcher": "$msCompile",
+          "group": {
+              "kind": "test",
+              "isDefault": true
+          }
+      },
     ]
 }
