@@ -14,10 +14,10 @@ namespace AdventOfCode2019
         {
             string s = $"{instruction:00000}";
 
-            OpCode = int.Parse(s[3..4]);
-            ParameterA = (ParameterMode)s[2];
-            ParameterB = (ParameterMode)s[1];
-            ParameterC = (ParameterMode)s[0];
+            OpCode = int.Parse(s[3..5]);
+            ParameterA = (ParameterMode)int.Parse(s[2].ToString());
+            ParameterB = (ParameterMode)int.Parse(s[1].ToString());
+            ParameterC = (ParameterMode)int.Parse(s[0].ToString());
         }
     }
 }

@@ -5,6 +5,8 @@ namespace AdventOfCode2019
 {
     public class Intcode
     {
+        static int input = 1;
+
         public static int[] Run(int noun, int verb, string filePath)
         {
             var input = System.IO.File.ReadAllText(filePath);
@@ -19,21 +21,57 @@ namespace AdventOfCode2019
 
         public static int[] Run(int noun, int verb, int[] memory)
         {
-            memory[1] = noun;
-            memory[2] = verb;
+            // memory[1] = noun;
+            // memory[2] = verb;
 
-            for(int i = 0; i < memory.Length; i += 4)
+            int i = 0;
+            while(i < memory.Length)
             {
                 var instruction = new Instruction(memory[i]);
 
-                int? result = RunOpCode(memory, i, ParameterMode.Position);
-
-                if(result == null)
+                if(memory[i] == 99)
                 {
                     break;
                 }
 
-                memory[memory[i + 3]] = result.Value;
+                int? output = null;
+                int? outputPosition = null;
+                int numParams = 0;
+                if(instruction.OpCode == 1)
+                {
+                    output = GetValue(instruction.ParameterA, i + 1, memory) + GetValue(instruction.ParameterB, i + 2, memory);
+                    outputPosition = memory[i + 3];
+                    numParams = 3;
+                }
+                else if(instruction.OpCode == 2)
+                {
+                    output = GetValue(instruction.ParameterA, i + 1, memory) * GetValue(instruction.ParameterB, i + 2, memory);
+                    outputPosition = memory[i + 3];
+                    numParams = 3;
+                }
+                else if(instruction.OpCode == 3)
+                {
+                    output = input;
+                    outputPosition = memory[i + 1];
+                    numParams = 1;
+                }
+                else if(instruction.OpCode == 4)
+                {
+                    Console.WriteLine($"OpCode 4 Outputs: {GetValue(instruction.ParameterA, i + 1, memory)}");
+                    numParams = 1;
+                }
+                else
+                {
+                    throw new Exception("error!");
+                }
+
+                if(output.HasValue && outputPosition.HasValue)
+                {
+                    Console.WriteLine($"Set index: {outputPosition.Value} to value: {output}");
+                    memory[outputPosition.Value] = output.Value;
+                }
+
+                i += 1 + numParams;
             }
 
             return memory;
@@ -45,15 +83,6 @@ namespace AdventOfCode2019
                 ParameterMode.Immediate => memory[index],
                 ParameterMode.Position => memory[memory[index]],
                 _ => throw new NotSupportedException()
-            };
-
-        private static int? RunOpCode(int[] memory, int index, ParameterMode mode) =>
-            memory[index] switch
-            {
-                99  => (int?)null,
-                1   => GetValue(mode, index + 1, memory) + GetValue(mode, index + 2, memory),
-                2   => GetValue(mode, index + 1, memory) * GetValue(mode, index + 2, memory),
-                _   => throw new ArgumentException()
             };
     }
 }
