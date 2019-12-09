@@ -7,34 +7,32 @@ namespace AdventOfCode2019.Day07
 {
     public class Intcode
     {
+        bool? hasRunFirstInput = null;
+
         private int[] memory;
+
+        // Instruction pointer.
+        int i = 0;
 
         public Stack<int> Diagnostics { get; set; } = new Stack<int>();
 
-        public int Run(int phaseSetting, int inputSignal, string filePath)
+        public Intcode(int[] initialMemoryState)
+        {
+            memory = initialMemoryState;
+        }
+
+        public Intcode(string filePath)
         {
             var input = System.IO.File.ReadAllText(filePath);
 
-            int[] initialMemoryState = input
+            memory = input
                 .Split(',')
                 .Select(x => int.Parse(x))
                 .ToArray();
-
-            return Run(phaseSetting, inputSignal, initialMemoryState);
-        }
-
-        public int Run(int phaseSetting, int inputSignal, int[] initialMemoryState)
-        {
-            memory = (int[])initialMemoryState.Clone();
-
-            return Run(phaseSetting, inputSignal);
         }
 
         public int Run(int phaseSetting, int inputSignal)
         {
-            bool? hasRunFirstInput = null;
-
-            int i = 0;
             while(i < memory.Length)
             {
                 var instruction = new AdventOfCode2019.Day05.Part02.Instruction(memory[i]);
@@ -72,7 +70,7 @@ namespace AdventOfCode2019.Day07
                         Diagnostics.Push(GetMemory(i + 1, instruction.ParameterA));
                         i = GetNextPointer(i, numParams: 1);
 
-                        continue;
+                        return 1;
                     case OpCode.JumpIfTrue:
                         if(GetMemory(i + 1, instruction.ParameterA) > 0)
                         {
@@ -117,7 +115,7 @@ namespace AdventOfCode2019.Day07
             }
 
             // If we did not halt on OpCode 99, something went wrong.
-            return 1;
+            return -1;
         }
 
         int GetNextPointer(int currentPosition, int numParams)

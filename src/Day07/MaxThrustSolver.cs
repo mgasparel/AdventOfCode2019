@@ -13,25 +13,22 @@ namespace AdventOfCode2019.Day07
             this.ampController = ampController;
         }
 
-        public int FindMaxThrust(int[] input)
+        public int FindMaxThrust(int[] input, int[] sequenceValues)
         {
-            int[] sequenceValues = new int[] { 0, 1, 2, 3, 4 };
-
             int maxThrust = 0;
             DateTime start = DateTime.Now;
 
-            // YOLOMODE: try random sequences for 5 seconds and take the highest value.
-            while(DateTime.Now - start < TimeSpan.FromSeconds(5))
+            // YOLOMODE: try random sequences for 3 seconds and take the highest value.
+            while(DateTime.Now - start < TimeSpan.FromSeconds(3))
             {
                 var randomizedSequence = sequenceValues
                     .OrderBy(x => rnd.Next())
                     .ToArray();
 
-                int result = ampController.GetThrusterSignal(input, randomizedSequence);
+                int result = ampController.GetThrusterSignal(randomizedSequence);
 
                 if(result > maxThrust)
                 {
-                    Console.WriteLine($"MaxThrust is now {result}");
                     maxThrust = result;
                 }
             }
