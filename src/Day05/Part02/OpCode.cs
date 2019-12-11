@@ -10,6 +10,7 @@ namespace AdventOfCode2019.Day05
         JumpIfFalse = 6,
         LessThan = 7,
         Equals = 8,
+        RelativeBaseOffset = 9,
         Halt = 99
     }
 }
