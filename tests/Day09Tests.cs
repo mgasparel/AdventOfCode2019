@@ -60,7 +60,20 @@ namespace AdventOfCode2019.Tests
             Assert.Equal(0, exitCode);
 
             Assert.Equal(
-                1,
+                2594708277,
+                intcode.Diagnostics.Peek());
+        }
+
+        [Fact]
+        public void SolvePart2()
+        {
+            var intcode = new Intcode();
+            int exitCode = intcode.Run(2, "../../../input/day_09.txt");
+
+            Assert.Equal(0, exitCode);
+
+            Assert.Equal(
+                87721,
                 intcode.Diagnostics.Peek());
         }
     }
