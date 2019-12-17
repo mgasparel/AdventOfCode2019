@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,24 +5,18 @@ namespace AdventOfCode2019.Day10
 {
     public class AsteroidMap
     {
-        enum Bearing
-        {
-            Left = 0,
-            Right = 1
-        }
-
         public static char Asteroid = '#';
-
-        public static char Space = '.';
 
         string[] map;
 
-        public Point[] Asteroids;
+        public Point[] AsteroidCoordinates;
+
+        public Dictionary<double, List<Point>> AsteroidsPerAngle;
 
         public AsteroidMap(string[] map)
         {
             this.map = map;
-            this.Asteroids = GetAllAsteroids();
+            this.AsteroidCoordinates = GetAllAsteroids();
         }
 
         Point[] GetAllAsteroids()
@@ -42,12 +35,11 @@ namespace AdventOfCode2019.Day10
             return points.ToArray();
         }
 
-        public int CountVisibleAsteroids(Point source)
+        public void LoadAsteroidsPerAngle(Point source)
         {
-            int visibleAsteroids = 0;
-            var asteroidsPerAngle = new Dictionary<double, List<Point>>();
+            AsteroidsPerAngle = new Dictionary<double, List<Point>>();
 
-            foreach (Point asteroid in Asteroids)
+            foreach (Point asteroid in AsteroidCoordinates)
             {
                 if(asteroid.Equals(source))
                 {
@@ -56,35 +48,31 @@ namespace AdventOfCode2019.Day10
 
                 double angle = Geometry.GetAngle(source, asteroid);
 
-                if(!asteroidsPerAngle.ContainsKey(angle))
+                if(!AsteroidsPerAngle.ContainsKey(angle))
                 {
-                    asteroidsPerAngle.Add(angle, new List<Point> { asteroid });
+                    AsteroidsPerAngle.Add(angle, new List<Point> { asteroid });
                 }
                 else
                 {
-                    asteroidsPerAngle[angle].Add(asteroid);
+                    AsteroidsPerAngle[angle].Add(asteroid);
                 }
             }
 
-            foreach (var pair in asteroidsPerAngle)
+            for (int i = 0; i < AsteroidsPerAngle.Keys.Count; i++)
             {
-                double minDistance = double.MaxValue;
-                foreach (Point asteroid in pair.Value)
-                {
-                    double distance = Geometry.GetLength(asteroid, source);
-                    if(distance < minDistance)
-                    {
-                        minDistance = distance;
-                    }
-                }
+                double angle = AsteroidsPerAngle.Keys.ElementAt(i);
 
-                if(minDistance < int.MaxValue)
-                {
-                    visibleAsteroids++;
-                }
+                AsteroidsPerAngle[angle] = AsteroidsPerAngle[angle]
+                    .OrderBy(x => Geometry.GetLength(x, source))
+                    .ToList();
             }
+        }
 
-            return visibleAsteroids;
+        public int CountVisibleAsteroids(Point source)
+        {
+            LoadAsteroidsPerAngle(source);
+
+            return AsteroidsPerAngle.Keys.Count;
         }
     }
 }

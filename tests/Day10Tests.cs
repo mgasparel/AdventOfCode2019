@@ -108,23 +108,61 @@ namespace AdventOfCode2019.Tests
         }
 
         [Fact]
+        public void Part5()
+        {
+            string[] input = new string[]
+            {
+                ".#..##.###...#######",
+                "##.############..##.",
+                ".#.######.########.#",
+                ".###.#######.####.#.",
+                "#####.##.#.##.###.##",
+                "..#####..#.#########",
+                "####################",
+                "#.####....###.#.#.##",
+                "##.#################",
+                "#####.##.###..####..",
+                "..######..##.#######",
+                "####.##.####...##..#",
+                ".#####..#.######.###",
+                "##...#.##########...",
+                "#.##########.#######",
+                ".####.#.###.###.#.##",
+                "....##.##.###..#####",
+                ".#.#.###########.###",
+                "#.#.#.#####.####.###",
+                "###.##.####.##.#..##"
+            };
+
+            var map = new AsteroidMap(input);
+
+            int visible = map.CountVisibleAsteroids(new Point(11, 13));
+
+            var p = AsteroidBlaster.BlastAsteroids(map.AsteroidsPerAngle, 200);
+
+            Assert.Equal(210, visible);
+            Assert.Equal(8, p.x);
+            Assert.Equal(2, p.y);
+        }
+
+        [Fact]
         public void GetAngleLessThan180Degrees()
         {
             var a = new Point(2, 2);
-            var b = new Point(0, 1);
+            var b = new Point(4, 3);
             var g = Geometry.GetAngle(a, b);
 
-            Assert.Equal(63.43, g);
+            Assert.Equal(116.57, g);
         }
 
         [Fact]
         public void GetAngleGreaterThan180Degrees()
         {
             var a = new Point(2, 2);
-            var b = new Point(4, 3);
+            var b = new Point(0, 1);
             var g = Geometry.GetAngle(a, b);
 
-            Assert.Equal(243.43, g);
+            Assert.Equal(296.57, g);
         }
 
         [Fact]
@@ -135,8 +173,8 @@ namespace AdventOfCode2019.Tests
             AsteroidMap map = new AsteroidMap(input);
 
             int mostVisible = 0;
-            Point location;
-            foreach (Point asteroid in map.Asteroids)
+            Point location = new Point();
+            foreach (Point asteroid in map.AsteroidCoordinates)
             {
                 int visible = map.CountVisibleAsteroids(asteroid);
 
@@ -148,6 +186,23 @@ namespace AdventOfCode2019.Tests
             }
 
             Assert.Equal(263, mostVisible);
+            Assert.Equal(23, location.x);
+            Assert.Equal(29, location.y);
+        }
+
+        [Fact]
+        public void SolvePart2()
+        {
+            var input = System.IO.File.ReadAllLines("../../../input/day_10.txt");
+
+            AsteroidMap map = new AsteroidMap(input);
+            map.LoadAsteroidsPerAngle(new Point(23, 29));
+
+            var p = AsteroidBlaster.BlastAsteroids(map.AsteroidsPerAngle, 200);
+
+            int result = (p.x * 100) + p.y;
+
+            Assert.Equal(1110, result);
         }
     }
 }

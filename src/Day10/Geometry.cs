@@ -28,7 +28,7 @@ namespace AdventOfCode2019.Day10
 
             var degrees = Math.Round(RadiansToDegrees(radians), 2);
 
-            if(b.x > a.x)
+            if(b.x < a.x)
             {
                 degrees = 360 - degrees;
             }
