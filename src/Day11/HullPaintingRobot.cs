@@ -19,7 +19,14 @@ namespace AdventOfCode2019.Day11
 
         Intcode intcode;
 
-        public List<Panel> Panels = new List<Panel>();
+        public List<Panel> Panels = new List<Panel>
+        {
+            new Panel
+            {
+                Location = new Point(0,0),
+                Color = White
+            }
+        };
 
         public HullPaintingRobot(Intcode intcode)
         {
