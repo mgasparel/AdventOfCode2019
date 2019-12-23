@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,16 +10,18 @@ namespace AdventOfCode2019.Day12
 
         public int TotalSystemEnergy => planets.Sum(x => x.TotalEnergy);
 
+        HashSet<string> StateHistory = new HashSet<string>();
+
         public PlanetSimulator(Planet[] planets)
         {
             this.planets = planets;
         }
 
-        public void Run(int numCycles)
+        public long Run(long numCycles)
         {
             var planetPairs = GetPlanetPairs();
 
-            for (int i = 0; i < numCycles; i++)
+            for (long i = 0; i < numCycles; i++)
             {
                 foreach (var pair in planetPairs)
                 {
@@ -29,8 +32,21 @@ namespace AdventOfCode2019.Day12
                 {
                     ApplyVelocity(planet);
                 }
+
+                var hash = HashState();
+                if(StateHistory.Contains(hash))
+                {
+                    return i;
+                }
+
+                StateHistory.Add(hash);
             }
+
+            return -1;
         }
+
+        string HashState()
+            => planets.Aggregate("", (total, next) => total + next.ToString());
 
         void ApplyGravity(Planet a, Planet b)
         {

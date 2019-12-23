@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using AdventOfCode2019.Day12;
 using Xunit;
@@ -42,6 +43,37 @@ namespace AdventOfCode2019.Tests
             sim.Run(1000);
 
             Assert.Equal(5350, sim.TotalSystemEnergy);
+        }
+
+        [Fact]
+        public void Part2()
+        {
+            string[] input =
+            {
+                "<x=-8, y=-10, z=0>",
+                "<x=5, y=5, z=10>",
+                "<x=2, y=-7, z=3>",
+                "<x=9, y=-8, z=-3>"
+            };
+
+            Planet[] planets = input
+                .Select(x => x.Substring(1, x.Length - 2))
+                .Select(x => PlanetParser.ParsePlanet(x))
+                .ToArray();
+
+            // var a = planets[0].GetHashCode();
+            // planets[0].Position.x += 5;
+            // var d = planets[0].GetHashCode();
+
+            // var a = new Point3D(1, 2, 3);
+            // var b = a.GetHashCode();
+            // a.x += 5;
+            // var d = a.GetHashCode();
+
+            var sim = new PlanetSimulator(planets);
+            long c = sim.Run(long.MaxValue);
+
+            Assert.Equal(74099, c);
         }
     }
 }
